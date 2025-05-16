@@ -1,0 +1,71 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TinhTienNuocGUI extends JFrame implements ActionListener {
+    private JTextField txtChiSoDau, txtChiSoCuoi;
+    private JButton btnTinh;
+    private JLabel lblKetQua;
+
+    public TinhTienNuocGUI() {
+        setTitle("Tính Tiền Nước");
+        setSize(400, 250);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new GridLayout(5, 2, 10, 10));
+
+        add(new JLabel("Số đầu đồng hồ (m³):"));
+        txtChiSoDau = new JTextField();
+        add(txtChiSoDau);
+
+        add(new JLabel("Số cuối đồng hồ (m³):"));
+        txtChiSoCuoi = new JTextField();
+        add(txtChiSoCuoi);
+
+        btnTinh = new JButton("Tính tiền");
+        btnTinh.addActionListener(this);
+        add(btnTinh);
+
+        lblKetQua = new JLabel("Kết quả sẽ hiển thị ở đây");
+        add(lblKetQua);
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new TinhTienNuocGUI();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            int chiSoDau = Integer.parseInt(txtChiSoDau.getText());
+            int chiSoCuoi = Integer.parseInt(txtChiSoCuoi.getText());
+
+            if (chiSoCuoi < chiSoDau) {
+                lblKetQua.setText("Lỗi: Số cuối phải >= số đầu.");
+                return;
+            }
+
+            int soTieuThu = chiSoCuoi - chiSoDau;
+            int tongTien = tinhTien(soTieuThu);
+
+            lblKetQua.setText("Tiêu thụ: " + soTieuThu + " m³, Tiền: " + tongTien + " VNĐ");
+        } catch (NumberFormatException ex) {
+            lblKetQua.setText("Vui lòng nhập số hợp lệ.");
+        }
+    }
+
+    public int tinhTien(int soNuoc) {
+        int tien = 0;
+        if (soNuoc <= 10) {
+            tien = soNuoc * 5000;
+        } else if (soNuoc <= 20) {
+            tien = 10 * 5000 + (soNuoc - 10) * 7000;
+        } else {
+            tien = 10 * 5000 + 10 * 7000 + (soNuoc - 20) * 10000;
+        }
+        return tien;
+    }
+}
